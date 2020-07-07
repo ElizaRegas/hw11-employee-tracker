@@ -14,7 +14,7 @@ connection.connect(function(err) {
   start();
 });
 
-function start() {
+const start = () => {
   inquirer
     .prompt({
       name: "initialQuestion",
@@ -30,15 +30,8 @@ function start() {
         "Update Employee Role"
       ]
     })
-    .then(function(answer) {
-      // based on their answer, either call the bid or the post functions
-      if (answer.postOrBid === "POST") {
-        postAuction();
-      }
-      else if(answer.postOrBid === "BID") {
-        bidAuction();
-      } else{
-        connection.end();
-      }
-    });
-}
+    .then((answer) => {
+      console.log(answer);
+    })
+};
+
