@@ -27,11 +27,19 @@ const start = () => {
         "View All Departments",
         "View All Roles",
         "View All Employees",
-        "Update Employee Role"
+        "View Employees by Manager",
+        "View Department Budget",
+        "Update Employee Role",
+        "Update Employee Manager",
+        "Delete a Department",
+        "Delete a Role",
+        "Delete an Employee"
       ]
     })
     .then((answer) => {
       console.log(answer);
     })
 };
+
+
 
