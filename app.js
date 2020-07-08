@@ -10,6 +10,8 @@ const connection = mysql.createConnection({
   database: "employeeDB",
 });
 
+
+
 connection.connect(function (err) {
   if (err) throw err;
   start();
