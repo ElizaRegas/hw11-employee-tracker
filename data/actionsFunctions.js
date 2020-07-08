@@ -1,12 +1,5 @@
-class ActionFunctions {
+const ActionFunctions = (answer) => {
 
-  constructor(department) {
-    this.department = department;
-  }
-
-  viewAllDepartments() {
-    console.log(this.department);
-  }
-} 
+};
 
 module.exports = ActionFunctions;

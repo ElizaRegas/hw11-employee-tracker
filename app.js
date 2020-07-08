@@ -1,7 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const actionItems = require("./data/actionItems.js");
-const actionFunctions = require("./data/actionsFunctions");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -11,36 +10,23 @@ const connection = mysql.createConnection({
   database: "employeeDB",
 });
 
-connection.connect(function (err) {
+connection.connect(function(err) {
   if (err) throw err;
-  connection.query("SELECT * FROM department", function (err, res) {
-    if (err) throw err;
-    console.log("conn query: " + JSON.stringify(res));
-    start();
-  });
-});
-
-const start = () => {
   inquirer
     .prompt(actionItems())
-    .then((res) => {
-      const desiredAction = res.choices;
-      console.log(desiredAction); 
-
-      // switch (expr) {
-      //   case 'Oranges':
-      //     console.log('Oranges are $0.59 a pound.');
-      //     break;
-      //   case 'Mangoes':
-      //   case 'Papayas':
-      //     console.log('Mangoes and papayas are $2.79 a pound.');
-      //     // expected output: "Mangoes and papayas are $2.79 a pound."
-      //     break;
-      //   default:
-      //     console.log(`Sorry, we are out of ${expr}.`);
-      // }       
+    .then(({ actionItems }) => {
+      console.log("results: " + JSON.stringify(actionItems));
+      if (actionItems === "View All Departments") {
+        viewDepartments();
+      } else {
+        console.log("Nope");
+      }
     })
     .catch((err) => {
       if (err) throw err;
     });
+});
+
+const viewDepartments = () => {
+  console.log("This is working");
 };
