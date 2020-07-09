@@ -2,11 +2,9 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const cTable = require("console.table"); 
 const logoCli = require('cli-logo'),
-    version = 'v' + require('./package.json').version,
-    description = require('./package.json').description,
-    name = require('./package.json').name;
-    console.log("\n");
-    logoCli.print({"name": name,"description": description,"version": version});
+  version = 'v' + require('./package.json').version;
+  console.log("\n");
+  logoCli.print({"name": "Employee Tracker","version": version});
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -52,7 +50,9 @@ const start = () => {
         viewDepartments();
       } else if (answer === "View All Roles") {
         viewRoles();
-      } else {
+      } else if (answer === "View Employees by Manager") {
+        viewByManager();
+      }else {
         console.log("\nNope\n");
       }
     });
@@ -67,7 +67,7 @@ const viewEmployees = () => {
   });
 }
 
-function viewDepartments() {
+const viewDepartments = () => {
   const query = "SELECT department FROM departments";
   connection.query(query, function (err, res) {
     console.log("\n");
@@ -76,11 +76,55 @@ function viewDepartments() {
   });
 }
 
-function viewRoles() {
+const viewRoles = () => {
   const query = "SELECT title FROM roles";
   connection.query(query, function (err, res) {
     console.log("\n");
     console.table(res);
     start();
   });
+}
+
+const viewByManager = () => {
+  inquirer.prompt({
+    name: "manager",
+    type: "list",
+    message: "Please select a manager:",
+    choices: [
+      "Dale Carnegie",
+      "Ruth Bader Ginsburg",
+      "J.P. Morgan",
+      "Steve Wozniak"
+    ],
+  }).then((answer) => {
+    const manager = answer.manager;
+    const query = "SELECT * FROM employees WHERE manager = ?";
+    connection.query(query, [manager], function (err, res) {
+      console.log("\n");
+      console.table(res);
+      start();
+    });
+  })
+}
+
+const viewDeptBudget = () => {
+  inquirer.prompt({
+    name: "budget",
+    type: "list",
+    message: "Please select a department:",
+    choices: [
+      "Dale Carnegie",
+      "Ruth Bader Ginsburg",
+      "J.P. Morgan",
+      "Steve Wozniak"
+    ],
+  }).then((answer) => {
+    const manager = answer.manager;
+    const query = "SELECT * FROM employees WHERE manager = ?";
+    connection.query(query, [manager], function (err, res) {
+      console.log("\n");
+      console.table(res);
+      start();
+    });
+  })
 }
