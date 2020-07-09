@@ -7,17 +7,19 @@ const connection = mysql.createConnection({
   port: 3306,
   user: "root",
   password: "Wino4ever",
-  database: "employeeDB",
+  database: "employee_trackerDB",
 });
 
-connection.connect(function(err) {
+connection.connect(function (err) {
   if (err) throw err;
   inquirer
     .prompt(actionItems())
-    .then(({ actionItems }) => {
-      console.log("results: " + JSON.stringify(actionItems));
-      if (actionItems === "View All Departments") {
-        viewDepartments();
+    .then((res) => {
+      if (res.actionItems === "View All Departments") {
+        const query = "SELECT * FROM departments";
+        connection.query(query, function (err, res) {
+          console.log("Results: " + JSON.stringify(res));
+        });
       } else {
         console.log("Nope");
       }
@@ -26,7 +28,3 @@ connection.connect(function(err) {
       if (err) throw err;
     });
 });
-
-const viewDepartments = () => {
-  console.log("This is working");
-};
