@@ -43,12 +43,7 @@ const start = () => {
       if (answer === "View All Employees") {
         viewEmployees();
       } else if (answer === "View All Departments") {
-        const query = "SELECT * FROM departments";
-        connection.query(query, function (err, res) {
-          for (i = 0; i < res.length; i++) {
-            console.table(res[i].department);
-          }
-        });
+        viewDepartments();
       } else {
         console.log("\nNope\n");
       }
@@ -57,6 +52,15 @@ const start = () => {
 
 function viewEmployees() {
   const query = "SELECT * FROM employees";
+  connection.query(query, function (err, res) {
+    console.log("\n");
+    console.table(res);
+    start();
+  });
+}
+
+function viewDepartments() {
+  const query = "SELECT department FROM departments";
   connection.query(query, function (err, res) {
     console.log("\n");
     console.table(res);
