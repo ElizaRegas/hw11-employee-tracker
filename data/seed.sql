@@ -8,13 +8,13 @@ CREATE TABLE departments
 (
   id INT
   AUTO_INCREMENT NOT NULL,
-  name VARCHAR
+  department VARCHAR
   (30),
   PRIMARY KEY
   (id)
 );
 
-INSERT INTO departments (name)
+INSERT INTO departments (department)
 VALUES
   ("Sales"),
   ("Engineering"),

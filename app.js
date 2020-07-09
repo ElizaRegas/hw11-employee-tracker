@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const table = require("console.table");
 const actionItems = require("./data/actionItems.js");
 
 const connection = mysql.createConnection({
@@ -15,10 +16,13 @@ connection.connect(function (err) {
   inquirer
     .prompt(actionItems())
     .then((res) => {
+      console.log("\r");
       if (res.actionItems === "View All Departments") {
         const query = "SELECT * FROM departments";
         connection.query(query, function (err, res) {
-          console.log("Results: " + JSON.stringify(res));
+          console.table(res.map(item => { 
+            return { department: item.department }
+          }));
         });
       } else {
         console.log("Nope");
