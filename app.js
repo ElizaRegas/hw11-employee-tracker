@@ -18,17 +18,36 @@ connection.connect(function (err) {
     .then((res) => {
       console.log("\r");
       if (res.actionItems === "View All Departments") {
-        const query = "SELECT * FROM departments";
-        connection.query(query, function (err, res) {
-          console.table(res.map(item => { 
-            return { department: item.department }
-          }));
-        });
+        viewDepartments();
+      } else if (res.actionItems === "View All Roles") {
+        viewRoles();
       } else {
-        console.log("Nope");
+        console.log("Please enter a valid selection.");
       }
     })
     .catch((err) => {
       if (err) throw err;
     });
 });
+
+const viewDepartments = () => {
+  const query = "SELECT * FROM departments";
+  connection.query(query, function (err, res) {
+    console.table(
+      res.map((item) => {
+        return { department: item.department };
+      })
+    );
+  });
+};
+
+const viewRoles = () => {
+  const query = "SELECT * FROM roles";
+  connection.query(query, function (err, res) {
+    console.table(
+      res.map((item) => {
+        return { title: item.title };
+      })
+    );
+  });
+};
