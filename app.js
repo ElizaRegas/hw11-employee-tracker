@@ -1,6 +1,12 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
-const cTable = require("console.table"); // const actionItems = require("./data/actionItems.js");
+const cTable = require("console.table"); 
+const logoCli = require('cli-logo'),
+    version = 'v' + require('./package.json').version,
+    description = require('./package.json').description,
+    name = require('./package.json').name;
+    console.log("\n");
+    logoCli.print({"name": name,"description": description,"version": version});
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -44,14 +50,16 @@ const start = () => {
         viewEmployees();
       } else if (answer === "View All Departments") {
         viewDepartments();
+      } else if (answer === "View All Roles") {
+        viewRoles();
       } else {
         console.log("\nNope\n");
       }
     });
 };
 
-function viewEmployees() {
-  const query = "SELECT * FROM employees";
+const viewEmployees = () => {
+  const query = "SELECT employees.id, employees.first_name, employees.last_name, roles.title, departments.department, roles.salary, employees.manager FROM employees INNER JOIN roles ON (roles.id = employees.role_id) INNER JOIN departments ON (departments.id = roles.department_id);";
   connection.query(query, function (err, res) {
     console.log("\n");
     console.table(res);
@@ -61,6 +69,15 @@ function viewEmployees() {
 
 function viewDepartments() {
   const query = "SELECT department FROM departments";
+  connection.query(query, function (err, res) {
+    console.log("\n");
+    console.table(res);
+    start();
+  });
+}
+
+function viewRoles() {
+  const query = "SELECT title FROM roles";
   connection.query(query, function (err, res) {
     console.log("\n");
     console.table(res);
