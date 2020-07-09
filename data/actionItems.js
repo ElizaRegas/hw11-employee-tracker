@@ -16,7 +16,8 @@ const actionItems = () => [
       "View All Roles",
       "View All Employees",
       "View Employees by Manager",
-      "View Department Budget"
+      "View Department Budget",
+      "End Session"
     ],
   },
 ];
