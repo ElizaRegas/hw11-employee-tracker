@@ -29,17 +29,17 @@ const start = () => {
         "View All Employees",
         "View All Departments",
         "View All Roles",
-        "View Employees by Manager",
-        "View Department Budget",
+        // "View Employees by Manager",
+        // "View Department Budget",
         "Add New Department",
         "Add New Role",
         "Add New Employee",
         "Update Employee Role",
-        "Update Employee Manager",
-        "Delete a Department",
-        "Delete a Role",
-        "Delete an Employee",
-        "End Session",
+        // "Update Employee Manager",
+        // "Delete a Department",
+        // "Delete a Role",
+        // "Delete an Employee",
+        "End Session"
       ],
     })
     .then((answer) => {
@@ -52,7 +52,11 @@ const start = () => {
         viewRoles();
       } else if (answer === "View Employees by Manager") {
         viewByManager();
-      }else {
+      } else if (answer === "Add New Department") {
+        newDepartment();
+      } else if (answer === "Add New Role") {
+        newRole();
+      } else {
         console.log("\nNope\n");
       }
     });
@@ -107,24 +111,30 @@ const viewByManager = () => {
   })
 }
 
-const viewDeptBudget = () => {
+const newDepartment = () => {
   inquirer.prompt({
-    name: "budget",
-    type: "list",
-    message: "Please select a department:",
-    choices: [
-      "Dale Carnegie",
-      "Ruth Bader Ginsburg",
-      "J.P. Morgan",
-      "Steve Wozniak"
-    ],
+    name: "newDept",
+    type: "input",
+    message: "What new department would you like to add?"
   }).then((answer) => {
-    const manager = answer.manager;
-    const query = "SELECT * FROM employees WHERE manager = ?";
-    connection.query(query, [manager], function (err, res) {
-      console.log("\n");
-      console.table(res);
-      start();
+    const dept = JSON.stringify(answer.newDept);
+    const query = `INSERT INTO departments (department) VALUE (${dept})`;
+    connection.query(query, function (err, res) {
+      viewDepartments();
+    });
+  })
+}
+
+const newRole = () => {
+  inquirer.prompt({
+    name: "newRole",
+    type: "input",
+    message: "What new role would you like to add?"
+  }).then((answer) => {
+    const role = JSON.stringify(answer.newRole);
+    const query = `INSERT INTO roles (title) VALUE (${role})`;
+    connection.query(query, function (err, res) {
+      viewRoles();
     });
   })
 }
