@@ -212,26 +212,62 @@ const newEmployee = () => {
 const updateEmpRole = () => {
   let employeeList;
   const query =
-    "SELECT CONCAT(first_name, ' ', last_name) AS EMPLOYEE_NAME FROM employees";
+    "SELECT CONCAT(first_name, ' ', last_name) AS EMPLOYEE_NAME, id FROM employees";
   connection.query(query, (err, res) => {
+    if (err) throw err;
+
+    const masterEmpArr = res;
     employeeList = res.map((emp) => emp.EMPLOYEE_NAME);
+    inquirer
+      .prompt([
+        {
+          name: "selectEmp",
+          type: "list",
+          message: "Please select employee:",
+          choices: employeeList,
+        },
+      ])
+      .then((answer) => {
+        const { selectEmp: chosenOne } = answer;
+        let newRole;
+        const query = "SELECT title, id FROM roles";
+        connection.query(query, (err, res) => {
+          if (err) throw err;
 
-    const newEmpRoleQuestArr = [
-      {
-        name: "selectEmp",
-        type: "list",
-        message: "Please select employee:",
-        choices: employeeList,
-      },
-    ];
+          const masterRolesObj = {};
+          newRole = res.map((role) => {
+            masterRolesObj[role.title] = role.id;
+            return role.title;
+          });
 
-    inquirer.prompt(newEmpRoleQuestArr[0]).then((answer) => {
-      let newRole;
-      const query = "SELECT title FROM roles";
-      connection.query(query, (err, res) => {
-        newRole = res.map((role) => role.title);
-        console.log(newRole);
+          inquirer
+            .prompt([
+              {
+                name: "selectNewRole",
+                type: "list",
+                message: "Please select employee's new role:",
+                choices: newRole,
+              },
+            ])
+            .then((ans) => {
+              const { selectNewRole: roleTitle } = ans;
+              const roleId = masterRolesObj[roleTitle];
+              const filtEmpArr = masterEmpArr.filter(
+                (person) => person.EMPLOYEE_NAME === chosenOne
+              );
+              const empObj = filtEmpArr[0];
+              const empId = empObj.id;
+
+              const query = `
+                UPDATE employees
+                SET role_id = ${roleId}
+                WHERE id = ${empId};`;
+              connection.query(query, function (err, res) {
+                if (err) throw err;
+                viewEmployees();
+              });
+            });
+        });
       });
-    });
   });
 };
