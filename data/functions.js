@@ -196,7 +196,8 @@ const updateEmpRole = (connection, start) => {
               const query = `
                 UPDATE employees
                 SET role_id = ${roleId}
-                WHERE id = ${empId};`;
+                WHERE id = ${empId};
+                `;
               connection.query(query, function (err, res) {
                 if (err) throw err;
                 viewEmployees(connection, start);
