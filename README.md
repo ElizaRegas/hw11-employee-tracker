@@ -6,7 +6,7 @@
 
 This was a homework assignment to meet the requirements of GA Tech's Full Stack Web Development Program. We were asked to build a command-line application that allows the user to add and view departments, roles, and employees, as well as update employee roles. This application uses mySQL and Inquirer. 
 
-![My Project](./data/bg12.png)
+![My Project](./assets/bg12.png)
 
 ## Table of Contents
 
