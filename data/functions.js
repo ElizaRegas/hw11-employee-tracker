@@ -86,9 +86,13 @@ const newRole = (connection, start) => {
 
 const newEmployee = (connection, start) => {
   let roles;
-  const query = "SELECT title FROM roles";
+  const query = "SELECT title, id FROM roles";
   connection.query(query, function (err, res) {
-    roles = res.map((role) => role.title);
+    const masterRolesObj = {};
+    roles = res.map((role) => {
+      masterRolesObj[role.title] = role.id;
+      return role.title;
+    });
 
     const newEmpQuestions = [
       {
@@ -121,11 +125,20 @@ const newEmployee = (connection, start) => {
     ];
 
     inquirer.prompt(newEmpQuestions).then((answer) => {
-      answer = JSON.stringify(answer);
-      const query = `INSERT INTO employees (first_name, last_name, role_id, manager_id, manager)
-      VALUES (${answer})`;
+      const {
+        newEmpFirst: first,
+        newEmpLast: last,
+        newEmpRole: role,
+        newEmpManager: man,
+      } = answer;
+
+      const query = `
+        INSERT INTO employees (first_name, last_name, role_id, manager)  
+        VALUE ("${first}", "${last}", ${masterRolesObj[role]}, "${man}");
+      `;
       connection.query(query, function (err, res) {
-        viewRoles(connection, start);
+        if (err) throw err;
+        viewEmployees(connection, start);
       });
     });
   });
@@ -202,7 +215,7 @@ const functionsJs = {
   newDepartment,
   newRole,
   newEmployee,
-  updateEmpRole
+  updateEmpRole,
 };
 
 module.exports = functionsJs;
